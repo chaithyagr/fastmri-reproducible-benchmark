@@ -240,7 +240,7 @@ class NFFTBase(Layer):
                 transform_type='type_2',
                 fft_direction='forward',
                 tol=1e-4,
-            )
+            ) / 2 / tf.math.sqrt(tf.math.reduce_prod(tf.cast(im_size, tf.complex64)))
             self.backward_op = lambda kspace, ktraj: tfnufft.nufft(
                 kspace,
                 tf.transpose(ktraj),
@@ -248,7 +248,7 @@ class NFFTBase(Layer):
                 transform_type='type_1',
                 fft_direction='backward',
                 tol=1e-4,
-            )
+            ) / 2 / tf.math.sqrt(tf.math.reduce_prod(tf.cast(im_size, tf.complex64)))
         self.density_compensation = density_compensation
 
     def pad_for_nufft(self, image):
