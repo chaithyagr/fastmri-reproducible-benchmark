@@ -86,7 +86,7 @@ class CrossDomainNet(Model):
             The neural network employed here is a U-net with 3 scales, leaky
             ReLU non-linearity, 4 base filters and a residual connection.
             Not taken into account when multicoil is False. Defaults to False.
-        normalize_image (bool): whether you want to divide the image by its
+        normalize_image (false): whether you want to divide the image by its
             maximum value before it is fed in the image net. This is for example
             useful when you have high density in the middle of the kspace.
         multi_gpu (bool): whether you want to place the different iteration

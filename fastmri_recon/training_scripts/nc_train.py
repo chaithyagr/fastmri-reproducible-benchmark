@@ -362,7 +362,7 @@ def train_ncnet_multinet(
         n_filters=None,
         n_iter=10,
         normalize_image=False,
-        n_primal=5,
+        n_primal=2,
         use_mixed_precision=False,
         original_run_id=None,
         checkpoint_epoch=0,

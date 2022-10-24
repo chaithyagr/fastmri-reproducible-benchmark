@@ -2,11 +2,18 @@
 """
 import os
 
-FASTMRI_DATA_DIR = os.environ.get('FASTMRI_DATA_DIR', '/media/Zaccharie/UHRes/')
-OASIS_DATA_DIR = os.environ.get('OASIS_DATA_DIR', '/media/Zaccharie/UHRes/OASIS_data')
-LOGS_DIR = os.environ.get('LOGS_DIR', './')
-CHECKPOINTS_DIR = os.environ.get('CHECKPOINTS_DIR', './')
-TMP_DIR = os.environ.get('TMP_DIR', './')
+def get_set_env(env, var):
+    # Gets variable from environment, else sets var to env
+    env_var = os.environ.get(env, var)
+    os.environ[env] = env_var
+    return env_var
+
+DATA_DIR = get_set_env('FASTMRI_DATA_DIR', os.path.join(os.environ.get('SCRATCH'), 'DATA'))
+FASTMRI_DATA_DIR = get_set_env('FASTMRI_DATA_DIR', os.path.join(os.environ.get('SCRATCH'), 'DATA'))
+OASIS_DATA_DIR = get_set_env('OASIS_DATA_DIR', os.path.join(os.environ.get('SCRATCH'), 'DATA', 'OASIS_tfrecords'))
+LOGS_DIR = get_set_env('LOGS_DIR', '/volatile/Chaithya/Networks/LogDir')
+CHECKPOINTS_DIR = get_set_env('CHECKPOINTS_DIR', '/volatile/Chaithya/Networks/')
+OUT_DIR = get_set_env('OUT_DIR', '/volatile/Chaithya/Networks/')
 
 n_volumes_train = 973
 n_volumes_val = 199

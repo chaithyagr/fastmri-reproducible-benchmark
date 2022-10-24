@@ -192,6 +192,7 @@ class VnetComplex(Model):
             im_size=None,
             dcomp=None,
             grad_traj=False,
+            nufft_implementation='tfkbnufft',
             **kwargs,
         ):
         super(VnetComplex, self).__init__(**kwargs)
@@ -208,6 +209,7 @@ class VnetComplex(Model):
                 im_size=im_size,
                 multicoil=False,
                 density_compensation=dcomp,
+                implementation=nufft_implementation,
                 grad_traj=grad_traj,
             )
         self.vnet = Vnet(
