@@ -1,6 +1,7 @@
 import warnings
 
 import tensorflow as tf
+import numpy as np
 from tensorflow.keras.layers import  Layer
 from tensorflow.python.ops.signal.fft_ops import fft2d, ifft2d, ifftshift, fftshift
 from tfkbnufft import kbnufft_forward, kbnufft_adjoint
@@ -240,7 +241,7 @@ class NFFTBase(Layer):
                 transform_type='type_2',
                 fft_direction='forward',
                 tol=1e-4,
-            )
+            ) / tf.sqrt(tf.math.reduce_prod(np.asarray(im_size, dtype='complex64') * 2))
             self.backward_op = lambda kspace, ktraj: tfnufft.nufft(
                 kspace,
                 tf.transpose(ktraj),
@@ -248,7 +249,7 @@ class NFFTBase(Layer):
                 transform_type='type_1',
                 fft_direction='backward',
                 tol=1e-4,
-            )
+            ) / tf.sqrt(tf.math.reduce_prod(np.asarray(im_size, dtype='complex64') * 2))
         self.density_compensation = density_compensation
 
     def pad_for_nufft(self, image):
