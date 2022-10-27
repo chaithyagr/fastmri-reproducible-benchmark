@@ -7,7 +7,7 @@ from tensorflow.python.ops.signal.fft_ops import fft2d, ifft2d, ifftshift, fftsh
 from tfkbnufft import kbnufft_forward, kbnufft_adjoint
 from tfkbnufft.kbnufft import KbNufftModule
 try:
-    import tensorflow_nufft as tfnufft
+    from jOpMRI.models.acquisition.utils import nufft
     ext_nufft = True
 except:
     ext_nufft = False
@@ -238,7 +238,7 @@ class NFFTBase(Layer):
             options = tfnufft.Options()
             if len(self.im_size) == 3:
                 options.max_batch_size = 1
-            self.forward_op = lambda image, ktraj: tfnufft.nufft(
+            self.forward_op = lambda image, ktraj: nufft(
                 image,
                 tf.transpose(ktraj),
                 transform_type='type_2',
@@ -246,7 +246,7 @@ class NFFTBase(Layer):
                 tol=1e-4,
                 options=options,
             ) / tf.sqrt(tf.math.reduce_prod(np.asarray(im_size, dtype='complex64') * 2))
-            self.backward_op = lambda kspace, ktraj: tfnufft.nufft(
+            self.backward_op = lambda kspace, ktraj: nufft(
                 kspace,
                 tf.transpose(ktraj),
                 grid_shape=im_size,
