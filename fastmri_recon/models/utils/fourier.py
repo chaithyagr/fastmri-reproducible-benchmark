@@ -7,6 +7,7 @@ from tensorflow.python.ops.signal.fft_ops import fft2d, ifft2d, ifftshift, fftsh
 from tfkbnufft import kbnufft_forward, kbnufft_adjoint
 from tfkbnufft.kbnufft import KbNufftModule
 try:
+    import tensorflow_nufft as tfnufft
     from jOpMRI.models.acquisition.utils import nufft
     ext_nufft = True
 except:
