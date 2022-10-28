@@ -7,8 +7,7 @@ from tensorflow.python.ops.signal.fft_ops import fft2d, ifft2d, ifftshift, fftsh
 from tfkbnufft import kbnufft_forward, kbnufft_adjoint
 from tfkbnufft.kbnufft import KbNufftModule
 try:
-    import tensorflow_nufft as tfnufft
-    from jOpMRI.models.acquisition.utils import nufft
+    from jOpMRI.models.acquisition.utils import nufft as nufft_with_repeat
     ext_nufft = True
 except:
     ext_nufft = False
@@ -236,26 +235,21 @@ class NFFTBase(Layer):
             self.forward_op = lambda image, ktraj: nufft(self.nufft_ob, image, ktraj, image_size=self.im_size)
             self.backward_op = kbnufft_adjoint(self.nufft_ob._extract_nufft_interpob())
         elif self.implementation == 'tensorflow-nufft':
-            options = tfnufft.Options()
-            if len(self.im_size) == 3:
-                options.max_batch_size = 1
-            self.forward_op = lambda image, ktraj: nufft(
+            self.forward_op = lambda image, ktraj: nufft_with_repeat(
                 image,
                 tf.transpose(ktraj),
                 transform_type='type_2',
                 fft_direction='forward',
                 tol=1e-4,
-                options=options,
-            ) / tf.sqrt(tf.math.reduce_prod(np.asarray(im_size, dtype='complex64') * 2))
-            self.backward_op = lambda kspace, ktraj: nufft(
+            ) 
+            self.backward_op = lambda kspace, ktraj: nufft_with_repeat(
                 kspace,
                 tf.transpose(ktraj),
                 grid_shape=im_size,
                 transform_type='type_1',
                 fft_direction='backward',
                 tol=1e-4,
-                options=options,
-            ) / tf.sqrt(tf.math.reduce_prod(np.asarray(im_size, dtype='complex64') * 2))
+            )
         self.density_compensation = density_compensation
 
     def pad_for_nufft(self, image):
